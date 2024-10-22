@@ -56,7 +56,7 @@ participant Alice
 participant Bob
 Alice -> Bob: Hello
 @enduml
-    ```
+```
 
 
 ### 2.3 激活与关闭（Activation & Deactivation）
@@ -87,7 +87,7 @@ else Failure
     Bob -> Alice: Failure response
 end
 @enduml
-
+```
 
 ### 2.5 循环（Loop）
 
@@ -99,7 +99,7 @@ loop Every day
     Alice -> Bob: Daily update
 end
 @enduml
-
+```
 
 
 ## 3. 时序图的高级特性
@@ -116,7 +116,7 @@ group Transaction
     Alice -> Bob: Confirm transaction
 end
 @enduml
-
+```
 
 
 ### 3.2 标题与注释
@@ -161,7 +161,7 @@ participant Charlie
 Alice -> Bob: Hello
 Bob -> Charlie: Hi
 @enduml
-
+```
 
 
 ### 4.2 条件与流程控制
