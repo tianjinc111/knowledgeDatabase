@@ -57,6 +57,8 @@ participant Bob
 Alice -> Bob: Hello
 @enduml
 
+###
+shit
 
 ### 2.3 激活与关闭（Activation & Deactivation）
 
