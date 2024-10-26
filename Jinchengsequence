@@ -1,0 +1,226 @@
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant WiFiModule as WiFi模块
+participant Phone as 手机
+participant WiFiList as WiFi列表
+
+用户 -> 控制中心: 点击WiFi图标
+控制中心 -> WiFi模块: 切换WiFi开关
+WiFi模块 -> Phone: 发送WiFi状态切换命令
+Phone -> WiFi模块: 返回当前WiFi状态
+WiFi模块 -> 控制中心: 更新WiFi状态显示
+
+note right of WiFi模块: 监听手机侧WiFi状态变化
+Phone -> WiFi模块: 手机切换WiFi网络
+WiFi模块 -> 控制中心: 更新WiFi名称显示
+
+用户 -> WiFi模块: 长按WiFi图标
+WiFi模块 -> 控制中心: 打开WiFi二级窗口
+控制中心 -> WiFiList: 显示配对的WiFi网络
+
+loop 每两秒刷新WiFi列表
+    WiFiList -> Phone: 获取已配对WiFi列表
+    Phone -> WiFiList: 返回WiFi列表及连接状态
+    WiFiList -> 控制中心: 更新WiFi列表显示
+end
+
+用户 -> WiFiList: 点击WiFi列表项
+WiFiList -> WiFi模块: 发送切换WiFi命令
+WiFi模块 -> Phone: 切换到选中的WiFi网络
+Phone -> WiFi模块: 返回新的WiFi连接状态
+WiFi模块 -> WiFiList: 更新WiFi连接状态
+
+用户 -> 控制中心: 点击WiFi二级窗口外的空白区域
+WiFi模块 -> 控制中心: 关闭WiFi二级窗口，返回主界面
+@enduml
+
+
+
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant BluetoothModule as 蓝牙模块
+participant Phone as 手机
+participant BluetoothList as 蓝牙设备列表
+
+用户 -> 控制中心: 点击蓝牙图标
+控制中心 -> BluetoothModule: 切换蓝牙开关
+BluetoothModule -> Phone: 发送蓝牙状态切换命令
+Phone -> BluetoothModule: 返回当前蓝牙状态
+BluetoothModule -> 控制中心: 更新蓝牙状态显示
+
+note right of BluetoothModule: 监听手机侧蓝牙状态变化
+Phone -> BluetoothModule: 手机切换蓝牙设备
+BluetoothModule -> 控制中心: 更新蓝牙连接设备名称显示
+
+用户 -> BluetoothModule: 长按蓝牙图标
+BluetoothModule -> 控制中心: 打开蓝牙二级窗口
+控制中心 -> BluetoothList: 显示已配对的蓝牙设备
+
+loop 每两秒刷新蓝牙设备列表
+    BluetoothList -> Phone: 获取已配对蓝牙设备列表
+    Phone -> BluetoothList: 返回蓝牙设备列表及连接状态
+    BluetoothList -> 控制中心: 更新蓝牙设备列表显示
+end
+
+用户 -> BluetoothList: 点击蓝牙设备列表项
+BluetoothList -> BluetoothModule: 发送切换蓝牙连接命令
+BluetoothModule -> Phone: 切换到选中的蓝牙设备
+Phone -> BluetoothModule: 返回新的蓝牙连接状态
+BluetoothModule -> BluetoothList: 更新蓝牙连接状态
+
+用户 -> 控制中心: 点击蓝牙二级窗口外的空白区域
+BluetoothModule -> 控制中心: 关闭蓝牙二级窗口，返回主界面
+@enduml
+
+
+
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant VolumeModule as 音量模块
+participant Phone as 手机
+
+note right of ControlCenter: 插上眼镜初始化时
+ControlCenter -> VolumeModule: 初始化音量状态
+VolumeModule -> Phone: 获取当前手机音量
+Phone -> VolumeModule: 返回手机音量值
+VolumeModule -> ControlCenter: 更新音量拖动条
+
+note over 用户: 控制中心侧操作
+用户 -> ControlCenter: 拖动或点击音量拖动条
+ControlCenter -> VolumeModule: 更新音量值
+VolumeModule -> Phone: 同步音量变化
+Phone -> VolumeModule: 返回当前音量状态
+VolumeModule -> ControlCenter: 更新音量拖动条显示
+
+note over Phone: 手机侧操作
+Phone -> VolumeModule: 手机音量改变
+VolumeModule -> ControlCenter: 同步音量变化
+ControlCenter -> VolumeModule: 更新音量拖动条显示
+@enduml
+
+
+
+
+
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant BrightnessModule as 亮度模块
+participant Phone as 手机
+
+note right of ControlCenter: 插上眼镜初始化时
+ControlCenter -> BrightnessModule: 初始化亮度状态
+BrightnessModule -> Phone: 获取当前手机亮度
+Phone -> BrightnessModule: 返回手机亮度值
+BrightnessModule -> ControlCenter: 更新亮度拖动条
+
+note over 用户: 控制中心侧操作
+用户 -> ControlCenter: 拖动或点击亮度拖动条
+ControlCenter -> BrightnessModule: 更新亮度值
+BrightnessModule -> Phone: 同步亮度变化
+Phone -> BrightnessModule: 返回当前亮度状态
+BrightnessModule -> ControlCenter: 更新亮度拖动条显示
+
+note over Phone: 手机侧操作
+Phone -> BrightnessModule: 手机亮度改变
+BrightnessModule -> ControlCenter: 同步亮度变化
+ControlCenter -> BrightnessModule: 更新亮度拖动条显示
+@enduml
+
+
+
+
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant ScreenshotModule as 截图模块
+participant Gallery as 图库
+participant PreviewWindow as 预览窗口
+
+note over 用户: 用户操作
+用户 -> ControlCenter: 点击截图按钮
+ControlCenter -> ScreenshotModule: 执行截图操作
+ScreenshotModule -> Gallery: 保存截图到图库
+ScreenshotModule -> ControlCenter: 退出控制中心
+
+note right of ScreenshotModule: 显示截图预览
+ScreenshotModule -> PreviewWindow: 显示截图预览窗口 (4秒)
+alt 用户未点击预览窗口
+    PreviewWindow -> PreviewWindow: 4秒后自动消失
+else 用户点击预览窗口
+    用户 -> PreviewWindow: 点击预览窗口
+    PreviewWindow -> Gallery: 打开图库
+    PreviewWindow -> PreviewWindow: 预览窗口消失
+end
+@enduml
+
+
+
+
+
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant ScreenRecordModule as 录屏模块
+participant Gallery as 图库
+participant StatusBar as 状态栏
+participant PreviewWindow as 预览窗口
+
+note over 用户: 用户操作
+用户 -> ControlCenter: 点击录屏按钮
+ControlCenter -> ScreenRecordModule: 开始录屏
+ScreenRecordModule -> ControlCenter: 退出控制中心
+ScreenRecordModule -> StatusBar: 显示录屏胶囊并开始计时
+
+note right of ScreenRecordModule: 录屏中
+
+alt 用户点击状态栏录屏胶囊
+    用户 -> StatusBar: 点击录屏胶囊
+    StatusBar -> ScreenRecordModule: 显示控制横幅
+    用户 -> ScreenRecordModule: 控制横幅停止录屏
+else 用户回到控制中心停止录屏
+    用户 -> ControlCenter: 点击录屏按钮
+    ControlCenter -> ScreenRecordModule: 停止录屏
+end
+
+ScreenRecordModule -> Gallery: 保存录屏到图库
+
+note right of ScreenRecordModule: 显示录屏预览
+ScreenRecordModule -> PreviewWindow: 显示录屏预览窗口 (显示录屏其中一帧，4秒)
+alt 用户未点击预览窗口
+    PreviewWindow -> PreviewWindow: 4秒后自动消失
+else 用户点击预览窗口
+    用户 -> PreviewWindow: 点击预览窗口
+    PreviewWindow -> Gallery: 打开图库
+    PreviewWindow -> PreviewWindow: 预览窗口消失
+end
+@enduml
+
+
+
+
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant VisionAdjustmentModule as 视力调节模块
+
+note over 用户: 用户操作
+用户 -> ControlCenter: 点击视力调节按钮
+ControlCenter -> VisionAdjustmentModule: 打开视力调节界面 (初始步骤)
+
+note right of VisionAdjustmentModule: 调整视力步骤
+用户 -> VisionAdjustmentModule: 点击"下一步"
+VisionAdjustmentModule -> VisionAdjustmentModule: 进入左眼调整步骤
+
+用户 -> VisionAdjustmentModule: 点击"下一步"
+VisionAdjustmentModule -> VisionAdjustmentModule: 进入右眼调整步骤
+
+用户 -> VisionAdjustmentModule: 点击"下一步"
+VisionAdjustmentModule -> VisionAdjustmentModule: 进入完成步骤
+
+用户 -> VisionAdjustmentModule: 点击"完成"
+VisionAdjustmentModule -> ControlCenter: 返回控制中心主页面
+@enduml
