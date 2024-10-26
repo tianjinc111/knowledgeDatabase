@@ -224,3 +224,126 @@ VisionAdjustmentModule -> VisionAdjustmentModule: 进入完成步骤
 用户 -> VisionAdjustmentModule: 点击"完成"
 VisionAdjustmentModule -> ControlCenter: 返回控制中心主页面
 @enduml
+
+
+
+
+
+开发设计逻辑
+本项目的开发设计基于一个智能眼镜的控制中心，该控制中心集合了多种功能模块，包括WiFi管理、蓝牙连接、音量控制、亮度调节、截图、录屏和视力调节等。这些模块不仅可以通过控制中心进行操作，还能够与手机端保持同步，从而实现跨设备的一致性体验。以下是各模块的设计逻辑概述：
+
+WiFi模块
+WiFi模块负责控制眼镜的WiFi连接状态。通过点击WiFi图标可以切换WiFi的开启和关闭，长按则会进入WiFi二级窗口，显示已配对的WiFi网络列表。在手机侧对WiFi进行的任何操作都会同步至控制中心，保证显示的一致性。模块实现了对WiFi状态的实时监听与同步，任何网络的切换或断开连接都会更新在WiFi图标的显示中。
+
+蓝牙模块
+蓝牙模块与WiFi模块的逻辑类似，点击图标可控制蓝牙的开启与关闭，长按进入蓝牙设备列表界面，显示当前已配对的设备。手机端的蓝牙状态改变也会及时同步至控制中心，确保用户在控制中心的蓝牙状态显示与手机端一致。通过模块的实时监听，可以对蓝牙连接状态进行精准的控制和反馈。
+
+音量和亮度控制模块
+音量和亮度控制模块均采用拖动条的设计，允许用户通过拖动或点击特定位置来调整音量或亮度的数值。这些变化会立即同步到手机端，以确保多设备之间的状态一致。此外，当手机侧进行音量或亮度的调整时，这些改动也会实时反映在控制中心中。模块的初始化会在眼镜连接时同步手机的当前音量和亮度状态，以提供一致的用户体验。
+
+截图模块
+截图模块通过控制中心上的一个按钮触发。当用户点击按钮时，控制中心会退出并进行截图，截图完成后会保存至图库，同时在屏幕左下角显示一个截图预览窗口。预览窗口会在4秒后自动消失，用户也可以通过点击预览窗口来立即关闭并打开图库查看截图。
+
+录屏模块
+录屏模块的设计逻辑与截图类似，用户点击录屏按钮后，控制中心会退出并开始录屏。在录屏过程中，状态栏会显示一个录屏胶囊，显示录屏时间。当用户点击状态栏的录屏胶囊或通过返回控制中心点击录屏按钮时，可以停止录屏。录屏结束后会在屏幕左下角显示一个预览窗口，用户可以点击预览查看录屏的内容。
+
+视力调节模块
+视力调节模块是一个多步骤的操作流程，包含初始、左眼、右眼和完成四个步骤。每点击"下一步"按钮，视力调节模块会进入下一个调整步骤，直到用户点击"完成"按钮，完成整个视力调节流程并返回控制中心主页面。
+
+
+
+
+
+@startuml
+package "控制中心" {
+    interface IControlCenter
+    class ControlCenter {
+        +显示主界面()
+        +退出主界面()
+        +同步状态()
+    }
+
+    package "功能模块" {
+        class WiFiModule {
+            +WiFi开关()
+            +打开WiFi二级窗口()
+            +同步WiFi状态()
+        }
+
+        class BluetoothModule {
+            +蓝牙开关()
+            +打开蓝牙二级窗口()
+            +同步蓝牙状态()
+        }
+
+        class VolumeModule {
+            +调整音量()
+            +同步音量状态()
+        }
+
+        class BrightnessModule {
+            +调整亮度()
+            +同步亮度状态()
+        }
+
+        class ScreenshotModule {
+            +截图操作()
+            +显示截图预览()
+        }
+
+        class ScreenRecordModule {
+            +开始录屏()
+            +停止录屏()
+            +显示录屏预览()
+        }
+
+        class VisionAdjustmentModule {
+            +初始化视力调整()
+            +下一步调整()
+            +完成调整()
+        }
+    }
+
+    ControlCenter --|> IControlCenter
+    ControlCenter o-- WiFiModule
+    ControlCenter o-- BluetoothModule
+    ControlCenter o-- VolumeModule
+    ControlCenter o-- BrightnessModule
+    ControlCenter o-- ScreenshotModule
+    ControlCenter o-- ScreenRecordModule
+    ControlCenter o-- VisionAdjustmentModule
+}
+
+package "外部交互" {
+    class Phone {
+        +同步状态()
+        +获取数据()
+        +更新数据()
+    }
+
+    class Gallery {
+        +保存截图()
+        +保存录屏()
+        +显示内容()
+    }
+
+    class StatusBar {
+        +显示录屏胶囊()
+        +停止录屏()
+    }
+
+    WiFiModule --> Phone : 同步WiFi状态
+    BluetoothModule --> Phone : 同步蓝牙状态
+    VolumeModule --> Phone : 同步音量状态
+    BrightnessModule --> Phone : 同步亮度状态
+    ScreenshotModule --> Gallery : 保存截图
+    ScreenRecordModule --> StatusBar : 显示录屏胶囊
+    ScreenRecordModule --> Gallery : 保存录屏
+}
+
+@enduml
+
+
+
+
+
