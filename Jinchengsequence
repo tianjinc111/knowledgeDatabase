@@ -347,3 +347,77 @@ package "外部交互" {
 
 
 
+@startuml
+actor User as 用户
+participant ControlCenter as 控制中心
+participant WiFiModule as WiFi模块
+participant BluetoothModule as 蓝牙模块
+participant VolumeModule as 音量模块
+participant BrightnessModule as 亮度模块
+participant ScreenshotModule as 截图模块
+participant ScreenRecordModule as 录屏模块
+participant VisionAdjustmentModule as 视力调节模块
+participant Gallery as 图库
+participant StatusBar as 状态栏
+participant WiFiList as WiFi列表
+participant BluetoothList as 蓝牙设备列表
+participant PreviewWindow as 预览窗口
+participant Phone as 手机
+
+note over 用户: 控制中心各模块操作
+
+== WiFi模块 ==
+用户 -> ControlCenter: 点击或长按WiFi图标
+ControlCenter -> WiFiModule: 切换WiFi状态或打开WiFi二级窗口
+WiFiModule -> Phone: 同步WiFi状态
+Phone -> WiFiModule: 返回当前WiFi状态
+WiFiModule -> ControlCenter: 更新WiFi显示或WiFi列表
+
+== 蓝牙模块 ==
+用户 -> ControlCenter: 点击或长按蓝牙图标
+ControlCenter -> BluetoothModule: 切换蓝牙状态或打开蓝牙二级窗口
+BluetoothModule -> Phone: 同步蓝牙状态
+Phone -> BluetoothModule: 返回当前蓝牙状态
+BluetoothModule -> ControlCenter: 更新蓝牙显示或设备列表
+
+== 音量控制模块 ==
+用户 -> ControlCenter: 拖动或点击音量拖动条
+ControlCenter -> VolumeModule: 更新音量值
+VolumeModule -> Phone: 同步音量变化
+Phone -> VolumeModule: 返回当前音量状态
+VolumeModule -> ControlCenter: 更新音量拖动条显示
+
+== 亮度控制模块 ==
+用户 -> ControlCenter: 拖动或点击亮度拖动条
+ControlCenter -> BrightnessModule: 更新亮度值
+BrightnessModule -> Phone: 同步亮度变化
+Phone -> BrightnessModule: 返回当前亮度状态
+BrightnessModule -> ControlCenter: 更新亮度拖动条显示
+
+== 截图模块 ==
+用户 -> ControlCenter: 点击截图按钮
+ControlCenter -> ScreenshotModule: 执行截图并退出
+ScreenshotModule -> Gallery: 保存截图到图库
+ScreenshotModule -> PreviewWindow: 显示截图预览 (4秒或点击)
+
+== 录屏模块 ==
+用户 -> ControlCenter: 点击录屏按钮
+ControlCenter -> ScreenRecordModule: 开始录屏并退出
+ScreenRecordModule -> StatusBar: 显示录屏胶囊并开始计时
+alt 停止录屏操作
+    用户 -> StatusBar: 点击胶囊停止录屏
+    或 用户 -> ControlCenter: 返回控制中心点击录屏按钮停止录屏
+end
+ScreenRecordModule -> Gallery: 保存录屏到图库
+ScreenRecordModule -> PreviewWindow: 显示录屏预览 (4秒或点击)
+
+== 视力调节模块 ==
+用户 -> ControlCenter: 点击视力调节按钮
+ControlCenter -> VisionAdjustmentModule: 打开视力调节界面
+用户 -> VisionAdjustmentModule: 逐步调整视力 (初始 -> 左眼 -> 右眼 -> 完成)
+VisionAdjustmentModule -> ControlCenter: 返回主页面
+
+@enduml
+
+
+
