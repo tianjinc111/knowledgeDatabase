@@ -1,0 +1,32 @@
+@startuml
+actor 用户 as User
+participant 手机App as MobileApp
+participant 蓝牙 as Bluetooth
+participant 智能手表 as Watch
+participant "SharedPreferences\n(本地存储)" as SharedPrefs
+
+== 获取相册表盘信息 ==
+User -> MobileApp: 进入相册表盘设置界面\n(点击或扫码)
+MobileApp -> Watch: albumWatchFaceInfoRequest()
+Watch --> MobileApp: albumWatchFaceInfoResponse\n(positionIndex, styleIndex,\nbackgroundStruct)
+
+== 用户配置表盘内容 ==
+User -> MobileApp: 点击“+”添加照片\n或点击“x”删除照片\n选择效果、滤镜、样式等
+MobileApp -> MobileApp: setAlbumWatchFaceContent()\n构造 albumWatchFaceConfigRequest\n(TLV 格式)
+
+== 通过蓝牙下发配置 ==
+MobileApp -> Bluetooth: send(albumWatchFaceConfigRequest)
+Bluetooth -> Watch: albumWatchFaceConfigRequest
+
+== 手表端处理请求 ==
+Watch -> Watch: processSetAlbumWatchFaceRequest()
+Watch -> SharedPrefs: saveAlbumCustomizeInfo(data)
+SharedPrefs --> Watch: 保存成功
+Watch -> Watch: notifyConfigChanged()\n刷新表盘（照片索引、样式等）
+
+== 返回结果给手机 ==
+Watch -> Bluetooth: send(albumWatchFaceConfigResponse\n{photoCount, successCode})
+Bluetooth -> MobileApp: albumWatchFaceConfigResponse\n{photoCount, successCode}
+MobileApp -> User: 显示保存结果
+
+@enduml
